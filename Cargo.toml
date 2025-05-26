@@ -1,7 +1,54 @@
 [package]
 name = "raycaster"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"  # Required for Bevy 0.16.0
 
 [dependencies]
 bevy = "0.16.0"
+
+# Optional: Enable dynamic linking for faster compile times during development
+# Uncomment the line below to speed up compilation (Windows users need performance optimizations)
+# bevy = { version = "0.16.0", features = ["dynamic_linking"] }
+
+# For release builds, consider adding performance optimizations
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+# For development builds, optimize dependencies but keep our code fast to compile
+[profile.dev.package."*"]
+opt-level = 3
+
+# Fast compile settings for development
+[profile.dev]
+opt-level = 1
+
+# 🎓 LEARNING NOTES - CARGO CONCEPTS:
+# 
+# 1. PACKAGE METADATA:
+#    - name: The name of your crate/package
+#    - version: Semantic versioning (major.minor.patch)
+#    - edition: Rust edition (2021 is latest, required for Bevy)
+#
+# 2. DEPENDENCIES:
+#    - bevy = "0.16.0" uses exact version
+#    - Could also use "0.16" for latest patch version
+#    - Features can be enabled with features = ["feature_name"]
+#
+# 3. PROFILES:
+#    - [profile.release]: Settings for `cargo build --release`
+#    - [profile.dev]: Settings for `cargo build` (development)
+#    - opt-level: Optimization level (0=none, 1=basic, 2=good, 3=aggressive)
+#    - lto: Link Time Optimization (slower compile, faster runtime)
+#    - codegen-units: Parallel code generation (1=slower compile, better optimization)
+#
+# 4. DEVELOPMENT OPTIMIZATIONS:
+#    - [profile.dev.package."*"]: Optimize dependencies even in dev mode
+#    - This makes Bevy run faster while keeping your code compilation fast
+#
+# COMMANDS TO REMEMBER:
+# - `cargo run`: Compile and run (development mode)
+# - `cargo run --release`: Compile and run (optimized)
+# - `cargo build`: Just compile
+# - `cargo check`: Fast syntax/type checking without full compilation
